@@ -1,0 +1,47 @@
+---
+title: "ANA 515 Assignment 1"
+author: "Zeid El Ameli"
+date: "3/27/2022"
+output: html_document
+theme: cerulean
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(knitr)
+library(bslib)
+```
+
+## Gun Deaths
+We pulled data from Github about gun death incidents with some valuable info about each
+
+```{r data, include = FALSE}
+url <- "https://raw.githubusercontent.com/fivethirtyeight/guns-data/master/full_data.csv"
+data <- read_csv(url)
+```
+
+## Selecting a subset
+
+We selected a subset of the data for people 65 years or younger
+
+
+
+```{r ,include = FALSE, results = "hide"}
+youth <- filter(data, age<= 65)
+summary(youth)
+original_count <- count(data)
+subset <- (count(data) - count(youth))
+```
+
+## Plotting Our Data
+We have data about `original_count` individuals killed by guns. Only `subset` are older than 65. The distribution of the remainder is shown below:
+
+```{r youth-dist, echo = FALSE}
+youth%>%
+ggplot(aes(age))+ geom_freqpoly(binwidth=1)  
+
+```
+```{r race-dist, echo = FALSE}
+youth%>%
+  ggplot(aes(fct_infreq(race)%>%fct_rev())) + geom_bar() +coord_flip() + labs(x="Victim Race")
+```
